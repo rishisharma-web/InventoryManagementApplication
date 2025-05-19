@@ -17,29 +17,54 @@ import com.tcs.inventory.service.PurchaseOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+//@RestController
+//@RequestMapping("/api/purchase-orders")
+//@RequiredArgsConstructor
+//public class PurchaseOrderController {
+//    private final PurchaseOrderService purchaseOrderService;
+//
+//    @PostMapping
+//    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(
+//            @Valid @RequestBody PurchaseOrderDTO dto) {
+//        return ResponseEntity.ok(purchaseOrderService.createPurchaseOrder(dto));
+//    }
+//
+//    @PutMapping("/{poNumber}/status")
+//    public ResponseEntity<Void> updateStatus(
+//            @PathVariable String poNumber,
+//            @RequestParam POStatus status) {
+//        purchaseOrderService.updateStatus(poNumber, status);
+//        return ResponseEntity.ok().build();
+//    }
+//    
+//    @GetMapping("/{poNumber}")
+//    public ResponseEntity<PurchaseOrderDTO> getPurchaseOrderByPoNumber(@PathVariable String poNumber) {
+//        return ResponseEntity.ok(purchaseOrderService.getPurchaseOrderByPoNumber(poNumber));
+//    }
+//
+//}
+
+
 @RestController
-@RequestMapping("/api/purchase-orders")
 @RequiredArgsConstructor
 public class PurchaseOrderController {
+
     private final PurchaseOrderService purchaseOrderService;
 
-    @PostMapping
-    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(
-            @Valid @RequestBody PurchaseOrderDTO dto) {
+    @PostMapping("/admin/purchase-orders")
+    public ResponseEntity<PurchaseOrderDTO> createPurchaseOrder(@Valid @RequestBody PurchaseOrderDTO dto) {
         return ResponseEntity.ok(purchaseOrderService.createPurchaseOrder(dto));
     }
 
-    @PutMapping("/{poNumber}/status")
-    public ResponseEntity<Void> updateStatus(
-            @PathVariable String poNumber,
-            @RequestParam POStatus status) {
+    @PutMapping("/admin/purchase-orders/{poNumber}/status")
+    public ResponseEntity<Void> updateStatus(@PathVariable String poNumber, @RequestParam POStatus status) {
         purchaseOrderService.updateStatus(poNumber, status);
         return ResponseEntity.ok().build();
     }
-    
-    @GetMapping("/{poNumber}")
+
+    @GetMapping("/admin/purchase-orders/{poNumber}")
     public ResponseEntity<PurchaseOrderDTO> getPurchaseOrderByPoNumber(@PathVariable String poNumber) {
         return ResponseEntity.ok(purchaseOrderService.getPurchaseOrderByPoNumber(poNumber));
     }
-
 }
+

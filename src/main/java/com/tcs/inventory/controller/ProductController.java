@@ -16,24 +16,46 @@ import com.tcs.inventory.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+//@RestController
+//@RequestMapping("/api/products")
+//@RequiredArgsConstructor
+//public class ProductController {
+//
+//    private final ProductService productService;
+//
+//    @PostMapping
+//    public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO dto) {
+//        return ResponseEntity.ok(productService.createProduct(dto));
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity<List<ProductDTO>> getAllProducts() {
+//        return ResponseEntity.ok(productService.getAllProducts());
+//    }
+//
+//    @GetMapping("/search")
+//    public ResponseEntity<List<ProductDTO>> searchProducts(@RequestParam String name) {
+//        return ResponseEntity.ok(productService.searchByName(name));
+//    }
+//}
+
 @RestController
-@RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping
+    @PostMapping("/admin/products")
     public ResponseEntity<ProductDTO> createProduct(@Valid @RequestBody ProductDTO dto) {
         return ResponseEntity.ok(productService.createProduct(dto));
     }
 
-    @GetMapping
+    @GetMapping("/admin/products")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
-    @GetMapping("/search")
+    @GetMapping("/admin/products/search")
     public ResponseEntity<List<ProductDTO>> searchProducts(@RequestParam String name) {
         return ResponseEntity.ok(productService.searchByName(name));
     }

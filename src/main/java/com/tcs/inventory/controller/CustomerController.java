@@ -15,18 +15,37 @@ import com.tcs.inventory.service.CustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+//@RestController
+//@RequestMapping("/api/customers")
+//@RequiredArgsConstructor
+//public class CustomerController {
+//    private final CustomerService customerService;
+//
+//    @PostMapping
+//    public ResponseEntity<CustomerDTO> createCustomer(@Valid @RequestBody CustomerDTO dto) {
+//        return ResponseEntity.ok(customerService.createCustomer(dto));
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+//        return ResponseEntity.ok(customerService.getAllCustomers());
+//    }
+//}
+
+
+
 @RestController
-@RequestMapping("/api/customers")
 @RequiredArgsConstructor
 public class CustomerController {
+
     private final CustomerService customerService;
 
-    @PostMapping
+    @PostMapping("/public/customers")
     public ResponseEntity<CustomerDTO> createCustomer(@Valid @RequestBody CustomerDTO dto) {
         return ResponseEntity.ok(customerService.createCustomer(dto));
     }
 
-    @GetMapping
+    @GetMapping("/admin/customers")
     public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
         return ResponseEntity.ok(customerService.getAllCustomers());
     }

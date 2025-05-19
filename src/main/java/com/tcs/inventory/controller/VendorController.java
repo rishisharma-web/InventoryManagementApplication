@@ -15,18 +15,34 @@ import com.tcs.inventory.service.VendorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+//@RestController
+//@RequestMapping("/api/vendors")
+//@RequiredArgsConstructor
+//public class VendorController {
+//    private final VendorService vendorService;
+//
+//    @PostMapping
+//    public ResponseEntity<VendorDTO> createVendor(@Valid @RequestBody VendorDTO dto) {
+//        return ResponseEntity.ok(vendorService.createVendor(dto));
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity<List<VendorDTO>> getAllVendors() {
+//        return ResponseEntity.ok(vendorService.getAllVendors());
+//    }
+//}
+
 @RestController
-@RequestMapping("/api/vendors")
 @RequiredArgsConstructor
 public class VendorController {
     private final VendorService vendorService;
 
-    @PostMapping
+    @PostMapping("/admin/vendors")
     public ResponseEntity<VendorDTO> createVendor(@Valid @RequestBody VendorDTO dto) {
         return ResponseEntity.ok(vendorService.createVendor(dto));
     }
 
-    @GetMapping
+    @GetMapping("/admin/vendors")
     public ResponseEntity<List<VendorDTO>> getAllVendors() {
         return ResponseEntity.ok(vendorService.getAllVendors());
     }

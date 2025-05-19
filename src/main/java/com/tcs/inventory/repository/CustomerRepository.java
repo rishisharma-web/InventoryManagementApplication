@@ -10,4 +10,6 @@ import com.tcs.inventory.entity.Customer;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findByCustomerCode(String customerCode);
+    Boolean existsByEmail(String email);
+    Boolean existsByContact(String email);
 }

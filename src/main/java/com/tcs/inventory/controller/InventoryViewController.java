@@ -11,14 +11,25 @@ import com.tcs.inventory.service.InventoryViewService;
 
 import lombok.RequiredArgsConstructor;
 
+//@RestController
+//@RequestMapping("/api/inventory")
+//@RequiredArgsConstructor
+//public class InventoryViewController {
+//
+//    private final InventoryViewService inventoryViewService;
+//
+//    @GetMapping
+//    public List<ProductInventoryViewDTO> getInventory() {
+//        return inventoryViewService.getInventory();
+//    }
+//}
 @RestController
-@RequestMapping("/api/inventory")
 @RequiredArgsConstructor
 public class InventoryViewController {
 
     private final InventoryViewService inventoryViewService;
 
-    @GetMapping
+    @GetMapping("/customer/inventory")
     public List<ProductInventoryViewDTO> getInventory() {
         return inventoryViewService.getInventory();
     }

@@ -19,30 +19,73 @@ import com.tcs.inventory.service.InvoiceService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+//@RestController
+//@RequestMapping("/api/invoices")
+//@RequiredArgsConstructor
+//public class InvoiceController {
+//    private final InvoiceService invoiceService;
+//
+//    // For admin (Purchase Invoice)
+//    @PostMapping("/purchase/{poNumber}")
+//    public ResponseEntity<InvoiceDTO> createPurchaseInvoice(@PathVariable String poNumber) {
+//        InvoiceDTO invoiceDTO = invoiceService.createPurchaseInvoiceFromPO(poNumber);
+//        return ResponseEntity.ok(invoiceDTO);
+//    }
+//
+//    // For customer (Sales Invoice)
+//    @PostMapping("/sales")
+//    public ResponseEntity<InvoiceDTO> createSalesInvoice(@Valid @RequestBody SalesInvoiceRequest request) {
+//        InvoiceDTO invoiceDTO = invoiceService.createSalesInvoice(request);
+//        return ResponseEntity.ok(invoiceDTO);
+//    }
+//    
+//    @GetMapping("/{invoiceNumber}")
+//    public ResponseEntity<InvoiceDTO> getInvoiceByNumber(@PathVariable String invoiceNumber) {
+//        Invoice invoice = invoiceService.getInvoiceByNumber(invoiceNumber);
+//        return ResponseEntity.ok(invoiceService.convertToDTO(invoice));
+//    }
+//
+//}
+
+//@RestController
+//@RequestMapping("/admin/invoices") // <--- This groups admin endpoints under one base path
+//@RequiredArgsConstructor
+//public class InvoiceController {
+//    
+//    private final InvoiceService invoiceService;
+//
+//    @PostMapping("/purchase/{poNumber}")
+//    public ResponseEntity<InvoiceDTO> createPurchaseInvoice(@PathVariable String poNumber) {
+//        System.out.println("✅ Received request to create invoice for PO: " + poNumber);
+//        return ResponseEntity.ok(invoiceService.createPurchaseInvoiceFromPO(poNumber));
+//    }
+//
+//    @GetMapping("/{invoiceNumber}")
+//    public ResponseEntity<InvoiceDTO> getInvoiceByNumber(@PathVariable String invoiceNumber) {
+//        return ResponseEntity.ok(invoiceService.convertToDTO(invoiceService.getInvoiceByNumber(invoiceNumber)));
+//    }
+//}
+
+
+
 @RestController
-@RequestMapping("/api/invoices")
 @RequiredArgsConstructor
 public class InvoiceController {
     private final InvoiceService invoiceService;
 
-    // For admin (Purchase Invoice)
-    @PostMapping("/purchase/{poNumber}")
+    @PostMapping("/admin/invoices/purchase/{poNumber}")
     public ResponseEntity<InvoiceDTO> createPurchaseInvoice(@PathVariable String poNumber) {
-        InvoiceDTO invoiceDTO = invoiceService.createPurchaseInvoiceFromPO(poNumber);
-        return ResponseEntity.ok(invoiceDTO);
+    	 System.out.println("Received request to create invoice for PO: " + poNumber);
+        return ResponseEntity.ok(invoiceService.createPurchaseInvoiceFromPO(poNumber));
     }
 
-    // For customer (Sales Invoice)
-    @PostMapping("/sales")
+    @PostMapping("/customer/invoices/sales")
     public ResponseEntity<InvoiceDTO> createSalesInvoice(@Valid @RequestBody SalesInvoiceRequest request) {
-        InvoiceDTO invoiceDTO = invoiceService.createSalesInvoice(request);
-        return ResponseEntity.ok(invoiceDTO);
-    }
-    
-    @GetMapping("/{invoiceNumber}")
-    public ResponseEntity<InvoiceDTO> getInvoiceByNumber(@PathVariable String invoiceNumber) {
-        Invoice invoice = invoiceService.getInvoiceByNumber(invoiceNumber);
-        return ResponseEntity.ok(invoiceService.convertToDTO(invoice));
+        return ResponseEntity.ok(invoiceService.createSalesInvoice(request));
     }
 
+    @GetMapping("/admin/invoices/{invoiceNumber}")
+    public ResponseEntity<InvoiceDTO> getInvoiceByNumber(@PathVariable String invoiceNumber) {
+        return ResponseEntity.ok(invoiceService.convertToDTO(invoiceService.getInvoiceByNumber(invoiceNumber)));
+    }
 }
