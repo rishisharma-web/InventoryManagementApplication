@@ -2,6 +2,8 @@ package com.tcs.inventory.entity;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,7 +30,9 @@ public class Product {
     private BigDecimal basePrice;
     private BigDecimal sellingPrice;
     private Integer quantity=0;
-    @ManyToOne
-    @JoinColumn(name = "inventory_id")
-    private Inventory inventory;
+//    @ManyToOne
+//    @JoinColumn(name = "inventory_id")
+//    @JsonBackReference
+//    private Inventory inventory;
+
 }

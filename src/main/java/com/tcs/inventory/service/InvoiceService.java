@@ -1,4 +1,5 @@
 package com.tcs.inventory.service;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,38 +39,32 @@ public class InvoiceService {
     private final PurchaseOrderRepository purchaseOrderRepository;
     private final CustomerRepository customerRepository;
     private final ProductRepository productRepository;
-    private final InventoryService inventoryService;
+    private final ProductService productService; // ✅ Use ProductService instead of InventoryService
 
     // For admin purchasing from vendor (Purchase Invoice from PO)
     public InvoiceDTO createPurchaseInvoiceFromPO(String poNumber) {
-    	System.out.println("check point 1");
         PurchaseOrder po = purchaseOrderRepository.findByPoNumber(poNumber)
                 .orElseThrow(() -> new PurchaseOrderNotFoundException("Purchase Order not found: " + poNumber));
-    	System.out.println("check point 2");
 
         if (po.getStatus() != POStatus.OPEN) {
             throw new InvalidOperationException("Cannot create invoice for " + po.getStatus() + " purchase order");
         }
-    	System.out.println("check point 3");
+
         Invoice invoice = Invoice.fromPurchaseOrder(po);
-    	System.out.println("check point 4");
         invoice.setInvoiceNumber(generateInvoiceNumber());
         invoice.setType(InvoiceType.PURCHASE);
         invoice.setDueDate(invoice.getInvoiceDate().plusDays(30));
 
         // Update inventory (increase stock)
         for (InvoiceItem item : invoice.getItems()) {
-        	System.out.println("check point 5");
-            inventoryService.updateInventory(
+            productService.updateQuantity(
                 item.getProduct().getProductCode(),
                 item.getQuantity()  // positive for purchase
             );
-        	System.out.println("check point 6");
         }
 
         po.setStatus(POStatus.CLOSED);
         purchaseOrderRepository.save(po);
-    	System.out.println("check point 7");
         invoiceRepository.save(invoice);
         return convertToDTO(invoice);
     }
@@ -93,8 +88,8 @@ public class InvoiceService {
             Product product = productRepository.findByProductCode(itemRequest.getProductCode())
                     .orElseThrow(() -> new ProductNotFoundException(itemRequest.getProductCode()));
 
-            // Check inventory availability
-            if (!inventoryService.isAvailable(product.getProductCode(), itemRequest.getQuantity())) {
+            // ✅ Check inventory availability
+            if (!productService.isAvailable(product.getProductCode(), itemRequest.getQuantity())) {
                 throw new InsufficientInventoryException(
                     "Insufficient inventory for product: " + product.getProductCode());
             }
@@ -106,27 +101,23 @@ public class InvoiceService {
             item.setUnitPrice(product.getSellingPrice()); // Use product's selling price
             invoice.addItem(item);
 
-            // Update inventory (decrease stock)
-            inventoryService.updateInventory(
-                product.getProductCode(),
-                -itemRequest.getQuantity()  // negative for sales
-            );
+            // ✅ Update inventory (decrease stock)
+            productService.updateQuantity(product.getProductCode(), -itemRequest.getQuantity());
         }
 
         invoiceRepository.save(invoice);
         return convertToDTO(invoice);
     }
-    
+
     public Invoice getInvoiceByNumber(String invoiceNumber) {
         return invoiceRepository.findByInvoiceNumber(invoiceNumber)
-            .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found: " + invoiceNumber));
+                .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found: " + invoiceNumber));
     }
-
 
     private String generateInvoiceNumber() {
         return "INV-" + System.currentTimeMillis();
     }
-    
+
     public InvoiceDTO convertToDTO(Invoice invoice) {
         if (invoice == null) {
             return null;
@@ -159,8 +150,6 @@ public class InvoiceService {
         }).toList();
 
         dto.setItems(itemDTOs);
-
         return dto;
     }
-
 }
